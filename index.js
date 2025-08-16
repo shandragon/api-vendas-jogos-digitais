@@ -1,17 +1,17 @@
-const express = require('express')
-const consign = require('consign')
-const Tabelas = require('./config/Tabelas')
+const express = require('express');
+const v1Routes = require('./routes/v1');
 
-Tabelas.init()
-Tabelas.seed()
+const app = express();
+const APP_PORT = process.env.APP_PORT || 3000;
 
-const app = express()
+// Realiza um parse do body para uma estrutura JSON
+app.use(express.json());
 
-consign().include('controllers').into(app)
+app.listen(APP_PORT, '0.0.0.0', () => {
+  console.log(`API de vendas de jogos em execução na porta ${APP_PORT}.`);
+  console.log(`Acesse a url http://localhost:${APP_PORT}`);
+});
 
-app.listen(3000, () => console.log('Servidor rodando na porta 3000'))
+app.use('/api/v1', v1Routes);
 
-app.get('/', (request, response) => {
-    response.send('Servidor on-line!')
-})
 

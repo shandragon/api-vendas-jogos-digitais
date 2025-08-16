@@ -1,20 +1,20 @@
 {
   "name": "vendas-api",
   "version": "1.0.0",
-  "description": "",
+  "description": "API de vendas",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon index.js"
   },
-  "author": "",
+  "author": "Adailton de Jesus Cerqueira Junior",
   "license": "ISC",
   "dependencies": {
-    "consign": "^0.1.6",
-    "express": "^4.18.2",
-    "sqlite3": "^5.1.6"
+    "dotenv": "^17.2.1",
+    "express": "^5.1.0",
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
-    "nodemon": "^3.0.1"
+    "nodemon": "^3.1.10"
   }
 }

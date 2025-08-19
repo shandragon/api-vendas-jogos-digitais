@@ -1,47 +1,53 @@
-const db = require("../config/conexao");
+const dbService = require('../services/DatabaseService');
 
 class UsuarioDAO {
-  adicionar(usuario) {
-    let sql = '';
-    if (usuario.id !== undefined) {
-      sql = `UPDATE usuarios SET nome = '${usuario.nome}', email = '${usuario.email}',
-       senha = '${usuario.senha}' WHERE id = ${usuario.id}`;
-    } else {
-      sql = `INSERT INTO usuarios(nome, email, senha)
-       VALUES('${usuario.nome}', '${usuario.email}', '${usuario.senha}')`;
-    }
 
-    db.run(sql);
+  async get(id) {
+    const sql = 'SELECT * FROM usuarios WHERE id = ?';
+    const row = await dbService.get(sql, [id]);
+    return row;
   }
 
-  get(id, callback) {
-    db.get('SELECT * FROM usuarios WHERE id = ?', [id], (err, usuario) => {
-        if (err || usuario == undefined ){
-            callback("not found", null);
-        } else {
-            callback(null, usuario);
-        }
-    });
+  async getByEmail(email) {
+    const sql = 'SELECT u.id, u.nome, u.email, u.senha, p.nome as perfil FROM usuarios u JOIN perfis p ON u.fk_perfil = p.id WHERE u.email = ?';
+    const row = await dbService.get(sql, [email]);
+    return row;
   }
 
-  all(callback) {
-    db.all('SELECT * FROM usuarios', [], (err, usuarios) => {
-      if (err || usuarios == undefined ){
-          callback("not found", null);
-      } else {
-          callback(null, usuarios);
-      }
-    });
+  async all() {
+    const sql = 'SELECT * FROM usuarios';
+    const rows = await dbService.all(sql);
+    return rows;
   }
 
   total(callback) {
     db.get('SELECT count(*) as count FROM usuarios', [], (err, total) => {
-      if (err || total == undefined ){
-          callback("not found", null);
+      if (err || total == undefined) {
+        callback("not found", null);
       } else {
-          callback(null, total.count);
+        callback(null, total.count);
       }
     });
+  }
+
+  async create(usuario) {
+    const sql = 'INSERT INTO usuarios (nome, email, senha, fk_perfil) VALUES (?, ?, ?, ?)';
+    const params = [usuario.nome, usuario.email, usuario.senha, usuario.fkPerfil];
+    const result = await dbService.run(sql, params);
+    return { id: result.lastID, ...usuario };
+  }
+
+  async update(id, usuario) {
+    const sql = 'UPDATE usuarios SET nome = ?, email = ?, senha = ?, fk_perfil = ? WHERE id = ?';
+    const params = [usuario.nome, usuario.email, usuario.senha, usuario.fkPerfil, id];
+    const result = await dbService.run(sql, params);
+    return { changes: result.changes };
+  }
+
+  async delete(id) {
+    const sql = 'DELETE FROM usuarios WHERE id = ?';
+    const result = await dbService.run(sql, [id]);
+    return { changes: result.changes };
   }
 }
 

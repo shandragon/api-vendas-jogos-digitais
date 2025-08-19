@@ -12,6 +12,10 @@ app.listen(APP_PORT, '0.0.0.0', () => {
   console.log(`Acesse a url http://localhost:${APP_PORT}`);
 });
 
+app.get('/check', (req, res) => {
+  res.status(200).json({ status: 'OK', message: 'API está funcionando corretamente.' });
+});
+
 app.use('/api/v1', v1Routes);
 
 

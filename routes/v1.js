@@ -4,6 +4,9 @@ const router = express.Router();
 const JogoController = require('../controllers/JogoController');
 const EmpresaController = require('../controllers/EmpresaController');
 
+// Rotas
+const authRoutes = require('./auth');
+
 router.get('/', (req, res) => res.send('API Version 1.0.0 on-line!'));
 
 router.get('/empresas', EmpresaController.index);
@@ -17,5 +20,7 @@ router.get('/jogos/:id', JogoController.show);
 router.post('/jogos', JogoController.create);
 router.put('/jogos/:id', JogoController.update);
 router.delete('/jogos/:id', JogoController.delete);
+
+router.use('/auth', authRoutes);
 
 module.exports = router;

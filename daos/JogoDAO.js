@@ -1,4 +1,4 @@
-const db = require("../config/conexao").db;
+const db = require("../config/Database").db;
 const Jogo = require("../models/Jogo");
 
 class JogoDAO {

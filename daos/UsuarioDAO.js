@@ -20,14 +20,9 @@ class UsuarioDAO {
     return rows;
   }
 
-  total(callback) {
-    db.get('SELECT count(*) as count FROM usuarios', [], (err, total) => {
-      if (err || total == undefined) {
-        callback("not found", null);
-      } else {
-        callback(null, total.count);
-      }
-    });
+  async total() {
+    const sql = 'SELECT count(*) as count FROM usuarios';
+    return await dbService.get(sql);
   }
 
   async create(usuario) {

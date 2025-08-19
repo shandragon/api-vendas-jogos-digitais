@@ -1,48 +1,62 @@
 const EmpresaDAO = require('../daos/EmpresaDAO');
 
 class EmpresaController {
-    index(req, res) {
-        EmpresaDAO.findAll(req.query.nome, (err, empresas) => {
-            if (err) return res.status(500).json({ error: err.message });
-            if (empresas.length === 0) return res.status(204).json();
-            res.json(empresas);
-        });
-    }
-
-    show(req, res) {
-        const id = req.params.id;
-        EmpresaDAO.findById(id, (err, empresa) => {
-            if (err) return res.status(500).json({ error: err.message });
-            if (empresa) {
-                res.json(empresa);
-            } else {
-                res.status(204);
+    async index(req, res) {
+        try {
+            const empresas = await EmpresaDAO.findAll(req.query.nome);
+            if (empresas.length === 0) {
+                return res.status(204).json();
             }
-        });
+            res.json(empresas);
+        } catch (error) {
+            res.status(500).json({ error: error.message, message: 'Erro ao buscar empresas.' });
+        }
     }
 
-    create(req, res) {
-        const { nome } = req.body;
-        if (!nome) return res.status(400).json({ error: "Campo nome e obrigatório" });
+    async show(req, res) {
+        try {
+            const id = req.params.id;
+            const empresa = await EmpresaDAO.findById(id);
+            if (!empresa) {
+                return res.status(204).json({ error: "Empresa não encontrada." });
+            }
+            res.json(empresa);
+        } catch (error) {
+            res.status(500).json({ error: error.message, message: 'Erro ao buscar empresa.' });
+        }
+    }
 
-        EmpresaDAO.create(nome, (err, empresa) => {
-            if (err) return res.status(500).json({ error: err.message });
+    async create(req, res) {
+        try {
+            const { nome } = req.body;
+            if (!nome) {
+                return res.status(400).json({ error: "Campo nome é obrigatório." });
+            }
+            const empresa = await EmpresaDAO.create(nome);
             res.status(201).json(empresa);
-        });
+        } catch (error) {
+            res.status(500).json({ error: error.message, message: 'Erro ao criar empresa.' });
+        }
     }
 
-    update(req, res) {
-        const { nome } = req.body;
-        const id = req.params.id;
-
-        EmpresaDAO.update(id, nome, (err, empresa) => {
-            if (err) return res.status(500).json({ error: err.message });
-            if (!empresa) return res.status(204).json({ error: "Empresa não encontrada" });
-            res.json({ message: "Empresa editada com sucesso." });
-        });
+    async update(req, res) {
+        try {
+            const { nome } = req.body;
+            const id = req.params.id;
+            if (!id) {
+                return res.status(400).json({ error: "ID da empresa é obrigatório." });
+            }
+            if (!nome) {
+                return res.status(400).json({ error: "Campo nome é obrigatório." });
+            }
+            const empresa = await EmpresaDAO.update(id, nome);
+            res.status(200).json(empresa);
+        } catch (error) {
+            res.status(500).json({ error: error.message, message: 'Erro ao atualizar empresa.' });
+        }
     }
 
-    delete(req, res) {
+    async delete(req, res) {
         const id = req.params.id;
 
         EmpresaDAO.delete(id, (err, empresa) => {
@@ -50,6 +64,17 @@ class EmpresaController {
             if (!empresa) return res.status(204).json({ error: "Empresa não encontrada." });
             res.json({ message: "Empresa removida com sucesso." });
         });
+        try {
+            const id = req.params.id;
+            if (!id) {
+                return res.status(400).json({ error: "ID da empresa é obrigatório." });
+            }
+
+            const empresa = await EmpresaDAO.delete(id);
+            res.status(200).json('Empresa removida com sucesso.');
+        } catch (error) {
+            res.status(500).json({ error: error.message, message: 'Erro ao deletar empresa.' });
+        }
     }
 }
 

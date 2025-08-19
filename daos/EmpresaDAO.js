@@ -1,9 +1,10 @@
 const db = require("../config/Database").db;
+const dbService = require('../services/DatabaseService');
 
 const Empresa = require("../models/Empresa");
 
 class EmpresaDAO {
-    static findAll(nome, callback) {
+    async findAll(nome) {
         let query = "SELECT * FROM empresas";
 
         // Verificando se foi passado um parâmetro de busca
@@ -11,46 +12,43 @@ class EmpresaDAO {
             query += " WHERE nome LIKE '%" + nome + "%'";
         }
 
-        db.all(query, [], (err, rows) => {
-            if (err) return callback(err, null);
-            if (rows == undefined) return callback(null, []);
-            const empresas = rows.map(row => new Empresa(row.id, row.nome));
-            callback(null, empresas);
-        });
+        return await dbService.all(query);
     }
 
-    static findById(id, callback) {
+    async findById(id) {
         const query = "SELECT * FROM empresas WHERE id = ?";
-        db.get(query, [id], (err, row) => {
-            if (err) return callback(err, null);
-            if (!row) return callback(null, null);
-            callback(null, new Empresa(row.id, row.nome));
-        });
+        return await dbService.get(query, [id]);
     }
 
-    static create(nome, callback) {
-        const query = "INSERT INTO empresas (nome) VALUES (?)";
-        db.run(query, [nome], function (err) {
-            if (err) return callback(err, null);
-            callback(null, new Empresa(this.lastID, nome));
-        });
+    async create(nome) {
+        try {
+            const query = "INSERT INTO empresas (nome) VALUES (?)";
+            const result = await dbService.run(query, [nome]);
+            return new Empresa(result.lastID, nome);
+        } catch (error) {
+            throw new Error("Erro ao criar empresa: " + error.message);
+        }
     }
 
-    static update(id, nome, callback) {
-        const query = "UPDATE empresas set nome = ? where id = ?";
-        db.run(query, [nome, id], function (err) {
-            if (err) return callback(err);
-            callback(null, this.changes > 0);
-        });
+    async update(id, nome) {
+        try {
+            const query = "UPDATE empresas set nome = ? where id = ?";
+            const result = await dbService.run(query, [nome, id]);
+            return { id, nome };
+        } catch (error) {
+            throw new Error("Erro ao atualizar empresa: " + error.message);
+        }
     }
 
-    static delete(id, callback) {
-        const query = "DELETE FROM empresas WHERE id = ?";
-        db.run(query, [id], function (err) {
-            if (err) return callback(err);
-            callback(null, this.changes > 0);
-        });
+    async delete(id) {
+        try {
+            const query = "DELETE FROM empresas WHERE id = ?";
+            const result = await dbService.run(query, [id]);
+            return { id };
+        } catch (error) {
+            throw new Error("Erro ao deletar empresa: " + error.message);
+        }
     }
 }
 
-module.exports = EmpresaDAO;
+module.exports = new EmpresaDAO();

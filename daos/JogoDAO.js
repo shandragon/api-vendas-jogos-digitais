@@ -29,20 +29,17 @@ class JogoDAO {
         return jogo;
     }
 
-    async update(id, nome, categoria, ano) {
-        const query = "UPDATE jogos set nome = ?, categoria = ?, ano = ? where id = ?";
-        db.run(query, [nome, categoria, ano, id], function (err) {
-            if (err) return callback(err);
-            callback(null, this.changes > 0);
-        });
+    async update(jogo) {
+        const query = "UPDATE jogos set nome = ?, descricao = ?, ano = ?, preco = ?, fk_empresa = ?, fk_categoria = ? where id = ?";
+        const params = [jogo.nome, jogo.descricao, jogo.ano, jogo.preco, jogo.fkEmpresa, jogo.fkCategoria, jogo.id];
+        const result = await dbService.run(query, params);
+        return { changes: result.changes };
     }
 
     async delete(id) {
         const query = "DELETE FROM jogos WHERE id = ?";
-        db.run(query, [id], function (err) {
-            if (err) return callback(err);
-            callback(null, this.changes > 0);
-        });
+        const result = await dbService.run(query, [id]);
+        return { changes: result.changes };
     }
 }
 

@@ -10,10 +10,7 @@ router.use(authMiddleware);
 router.get('/', jogoController.index);
 router.get('/:id', jogoController.show);
 router.post('/', [adminMiddleware], jogoController.create);
-
-/*
-router.put('/:id', JogoController.update);
-router.delete('/:id', JogoController.delete);
-*/
+router.put('/:id', [adminMiddleware], jogoController.update);
+router.delete('/:id', [adminMiddleware], jogoController.delete);
 
 module.exports = router;

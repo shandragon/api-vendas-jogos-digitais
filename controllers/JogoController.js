@@ -40,25 +40,32 @@ class JogoController {
         }
     }
 
-    update(req, res) {
-        const { nome, categoria, ano } = req.body;
-        const id = req.params.id;
+    async update(req, res) {
+        const jogo = Jogo.fromRequest(req.body);
+        jogo.id = req.params.id;
+        if (!jogo.nome && !jogo.preco && !jogo.fkCategoria && !jogo.ano && !jogo.fkEmpresa) return res.status(400).json({ error: "Campos nome, preço, ano, fkCategoria e fkEmpresa são obrigatórios" });
 
-        JogoDAO.update(id, nome, categoria, ano, (err, jogo) => {
-            if (err) return res.status(500).json({ error: err.message });
-            if (!jogo) return res.status(204).json({ error: "Jogo não encontrado" });
-            res.json({ message: "Jogo editado com sucesso." });
-        });
+        try {
+            const retorno = await JogoDAO.update(jogo);
+            res.status(201).json(retorno);
+        } catch (error) {
+            return res.status(500).json({ error: error.message, message: 'Erro ao atualizar o jogo.' });
+        }
     }
 
-    delete(req, res) {
+    async delete(req, res) {
         const id = req.params.id;
+        try {
+            const id = req.params.id;
+            if (!id) {
+                return res.status(400).json({ error: "ID do jogo é obrigatório." });
+            }
 
-        JogoDAO.delete(id, (err, jogo) => {
-            if (err) return res.status(500).json({ error: err.message });
-            if (!jogo) return res.status(204).json({ error: "Jogo não encontrado." });
-            res.json({ message: "Jogo removido com sucesso." });
-        });
+            const empresa = await JogoDAO.delete(id);
+            res.status(200).json('Jogo removido com sucesso.');
+        } catch (error) {
+            res.status(500).json({ error: error.message, message: 'Erro ao deletar jogo.' });
+        }
     }
 }
 

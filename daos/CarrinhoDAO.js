@@ -1,0 +1,49 @@
+const dbService = require('../services/dbService');
+const Carrinho = require("../models/Carrinho");
+
+class CarrinhoDAO {
+  async findByUser(fkUsuario) {
+    const sql = 'SELECT * FROM carrinhos WHERE fk_usuario = ?';
+    const rows = await dbService.all(sql, [fkUsuario]);
+    return rows.map(row => new Carrinho(row.id, row.fk_usuario));
+  }
+
+  async findById(id) {
+    const sql = 'SELECT * FROM carrinhos WHERE id = ?';
+    const row = await dbService.get(sql, [id]);
+    return row ? new Carrinho(row.id, row.fk_usuario) : null;
+  }
+
+  async findAll() {
+    const sql = 'SELECT * FROM carrinhos';
+    const rows = await dbService.all(sql);
+    return rows.map(row => new Carrinho(row.id, row.fk_usuario));
+  }
+
+  async create(fkUsuario) {
+    const sql = 'INSERT INTO carrinhos (fk_usuario) VALUES (?)';
+    const params = [fkUsuario];
+    const result = await dbService.run(sql, params);
+    return new Carrinho(result.lastID, fkUsuario);
+  }
+
+  async update(id, fkUsuario) {
+    const sql = `UPDATE carrinhos SET fk_usuario = ? WHERE id = ?`;
+    const result = await dbService.run(sql, [fkUsuario, id]);
+    return { changes: result.changes };
+  }
+
+  async delete(id) {
+    const sql = 'DELETE FROM carrinhos WHERE id = ?';
+    const result = await dbService.run(sql, [id]);
+    return { changes: result.changes };
+  }
+
+  async deleteByUserId(fkUsuario) {
+    const sql = 'DELETE FROM carrinhos WHERE fk_usuario = ?';
+    const result = await dbService.run(sql, [fkUsuario]);
+    return { changes: result.changes };
+  }
+}
+
+module.exports = new CarrinhoDAO();

@@ -77,7 +77,8 @@ class Database {
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 fk_usuario INTEGER NOT NULL,
                 valor_total real NOT NULL,
-                quantidade integer NOT NULL, 
+                quantidade integer NOT NULL,
+                data datetime DEFAULT(datetime('now')),
                 FOREIGN KEY(fk_usuario) REFERENCES usuarios(id))`);
 
             // Criação da tabela de itens do carrinho
@@ -95,7 +96,7 @@ class Database {
     _seed(){
         this.db.serialize(() => {
             // Insere perfis
-            this.db.run(`INSERT OR IGNORE INTO perfis (nome) VALUES ('Admin')`);
+            this.db.run(`INSERT OR IGNORE INTO perfis (nome) VALUES ('Administrador')`);
             this.db.run(`INSERT OR IGNORE INTO perfis (nome) VALUES ('Cliente')`);
 
             // Insere categorias

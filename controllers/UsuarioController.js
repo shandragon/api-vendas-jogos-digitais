@@ -1,4 +1,5 @@
-const UsuarioDAO = require('../daos/UsuarioDao');
+const UsuarioDAO = require('../daos/UsuarioDAO');
+const PerfilDAO = require('../daos/PerfilDAO');
 
 class UsuarioController {
     index(req, res) {
@@ -8,16 +9,44 @@ class UsuarioController {
         });
     }
 
-    show(req, res) {
-        const id = req.params.id;
-        UsuarioDAO.get(id, (err, usuario) => {
-            if (err) return res.status(500).json({ error: err.message });
-            if (usuario) {
-                res.json(usuario);
-            } else {
-                res.status(404).json('Usuário não encontrado.');
+    async show(req, res) {
+        try {
+            const id = req.params.id;
+            const usuario = await UsuarioDAO.get(id);
+            if (!usuario) {
+                return res.status(204).json({ error: "Usuário não encontrada." });
             }
-        });
+            res.json(usuario);
+        } catch (error) {
+            res.status(500).json({ error: error.message, message: 'Erro ao buscar usuário.' });
+        }
+    }
+
+    async createProfile(req, res) {
+        const { nome } = req.body;
+        if (!nome) {
+            return res.status(400).json({ message: 'O nome do perfil é obrigatório.' });
+        }
+        try {
+            const existingProfile = await PerfilDAO.getByName(nome);
+            if (existingProfile) {
+                return res.status(409).json({ message: 'Este perfil já existe.' });
+            }
+
+            const newProfile = await PerfilDAO.create({ nome });
+            res.status(201).json({ message: 'Perfil criado com sucesso!', profileId: newProfile.id });
+        } catch (error) {
+            res.status(500).json({ message: 'Erro no servidor.', error: error.message });
+        }
+    }
+
+    async getAllProfiles(req, res) {
+        try {
+            const profiles = await PerfilDAO.all();
+            res.json(profiles);
+        } catch (error) {
+            res.status(500).json({ message: 'Erro no servidor.', error: error.message });
+        }
     }
 
     create(req, res) {

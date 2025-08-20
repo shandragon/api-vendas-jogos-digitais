@@ -1,44 +1,35 @@
-const db = require("../config/Database").db;
+const dbService = require('../services/DatabaseService');
 const Jogo = require("../models/Jogo");
 
 class JogoDAO {
-    static findAll(categoria, callback) {
+    async all(categoria) {
         let query = "SELECT * FROM jogos";
 
         // Verificando se foi passado um parâmetro de busca
         if (categoria) {
             query += " WHERE categoria LIKE '%" + categoria + "%'";
         }
-
-        db.all(query, [], (err, rows) => {
-            if (err){
-                callback("not found", null);
-            } else {
-                if (rows == undefined) return callback(null, []);
-                const jogos = rows.map(row => new Jogo(row.id, row.nome, row.categoria, row.ano, row.fk_empresa));
-                callback(null, jogos);
-            }
-        });
+        const rows = await dbService.all(query);
+        if (rows == undefined) return [];
+        return rows.map(row => new Jogo(row.id, row.nome, row.categoria, row.ano, row.fk_empresa));
     }
 
-    static findById(id, callback) {
+    async findById(id) {
         const query = "SELECT * FROM jogos WHERE id = ?";
-        db.get(query, [id], (err, row) => {
-            if (err) return callback(err, null);
-            if (!row) return callback(null, null);
-            callback(null, new Jogo(row.id, row.nome, row.categoria, row.ano, row.fk_empresa));
-        });
+        const row = await dbService.get(query, [id]);
+        if (!row) return null;
+        return new Jogo(row.id, row.nome, row.categoria, row.ano, row.fk_empresa);
     }
 
-    static create(nome, categoria, ano, fkEmpresa, callback) {
-        const query = "INSERT INTO jogos (nome, categoria, ano, fk_empresa) VALUES (?, ?, ?, ?)";
-        db.run(query, [nome, categoria, ano, fkEmpresa], function (err) {
-            if (err) return callback(err, null);
-            callback(null, new Jogo(this.lastID, nome, categoria, ano, fkEmpresa));
-        });
+    async create(jogo) {
+        const query = "INSERT INTO jogos (nome, descricao, ano, preco, fk_empresa, fk_categoria) VALUES (?, ?, ?, ?, ?, ?)";
+        const params = [jogo.nome, jogo.descricao, jogo.ano, jogo.preco, jogo.fkEmpresa, jogo.fkCategoria];
+        const result = await dbService.run(query, params);
+        jogo.id = result.lastID; // Atribuindo o ID gerado pelo banco de dados
+        return jogo;
     }
 
-    static update(id, nome, categoria, ano, callback) {
+    async update(id, nome, categoria, ano) {
         const query = "UPDATE jogos set nome = ?, categoria = ?, ano = ? where id = ?";
         db.run(query, [nome, categoria, ano, id], function (err) {
             if (err) return callback(err);
@@ -46,7 +37,7 @@ class JogoDAO {
         });
     }
 
-    static delete(id, callback) {
+    async delete(id) {
         const query = "DELETE FROM jogos WHERE id = ?";
         db.run(query, [id], function (err) {
             if (err) return callback(err);
@@ -55,4 +46,4 @@ class JogoDAO {
     }
 }
 
-module.exports = JogoDAO;
+module.exports = new JogoDAO();

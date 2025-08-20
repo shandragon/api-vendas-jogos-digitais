@@ -1,11 +1,13 @@
 const dbService = require('../services/DatabaseService');
+const Usuario = require("../models/Usuario");
 
 class UsuarioDAO {
 
   async get(id) {
     const sql = 'SELECT * FROM usuarios WHERE id = ?';
     const row = await dbService.get(sql, [id]);
-    return row;
+    if (!row) return null;
+    return new Usuario(row.id, row.nome, row.email, row.senha, row.fk_perfil);
   }
 
   async getByEmail(email) {

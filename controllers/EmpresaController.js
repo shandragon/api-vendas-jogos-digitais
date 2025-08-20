@@ -58,12 +58,6 @@ class EmpresaController {
 
     async delete(req, res) {
         const id = req.params.id;
-
-        EmpresaDAO.delete(id, (err, empresa) => {
-            if (err) return res.status(500).json({ error: err.message });
-            if (!empresa) return res.status(204).json({ error: "Empresa não encontrada." });
-            res.json({ message: "Empresa removida com sucesso." });
-        });
         try {
             const id = req.params.id;
             if (!id) {

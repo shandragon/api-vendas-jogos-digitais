@@ -86,7 +86,8 @@ class Database {
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 fk_jogo INTEGER NOT NULL, 
                 fk_carrinho INTEGER NOT NULL, 
-                fk_venda INTEGER, 
+                fk_venda INTEGER,
+                quantidade INTEGER NOT NULL DEFAULT 1,
                 FOREIGN KEY(fk_jogo) REFERENCES jogos(id), 
                 FOREIGN KEY(fk_carrinho) REFERENCES carrinhos(id), 
                 FOREIGN KEY(fk_venda) REFERENCES vendas(id))`);

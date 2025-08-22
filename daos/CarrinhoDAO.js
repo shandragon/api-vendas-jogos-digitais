@@ -1,4 +1,4 @@
-const dbService = require('../services/dbService');
+const dbService = require('../services/DatabaseService');
 const Carrinho = require("../models/Carrinho");
 
 class CarrinhoDAO {
@@ -6,6 +6,14 @@ class CarrinhoDAO {
     const sql = 'SELECT * FROM carrinhos WHERE fk_usuario = ?';
     const rows = await dbService.all(sql, [fkUsuario]);
     return rows.map(row => new Carrinho(row.id, row.fk_usuario));
+  }
+
+  async findByUserAndGame(fkUsuario, fkJjogo) {
+    const sql = `SELECT * FROM carrinhos c 
+    JOIN itens_carrinho ic ON c.id = ic.fk_carrinho
+    WHERE c.fk_usuario = ? AND fk_jogo = ?`;
+    const row = await dbService.get(sql, [fkUsuario, fkJjogo]);
+    return row;
   }
 
   async findById(id) {

@@ -4,3 +4,5 @@ class Carrinho {
         this.fkUsuario = fkUsuario;
     }
 }
+
+module.exports = Carrinho;

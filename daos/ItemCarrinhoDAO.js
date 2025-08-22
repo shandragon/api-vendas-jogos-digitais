@@ -1,10 +1,10 @@
-const dbService = require('../services/dbService');
+const dbService = require('../services/DatabaseService');
 const ItemCarrinho = require("../models/ItemCarrinho");
 
 class ItemCarrinhoDAO {
   async create(item) {
-    const sql = 'INSERT INTO itens_carrinho (fk_jogo, fk_carrinho, fk_venda) VALUES (?, ?, ?)';
-    const params = [item.fkJogo, item.fkCarrinho, item.fkVenda];
+    const sql = 'INSERT INTO itens_carrinho (fk_jogo, fk_carrinho, fk_venda, quantidade) VALUES (?, ?, ?, ?)';
+    const params = [item.fkJogo, item.fkCarrinho, item.fkVenda, item.quantidade];
     const result = await dbService.run(sql, params);
     return new ItemCarrinho(result.lastID, ...item );
   }
@@ -35,4 +35,4 @@ class ItemCarrinhoDAO {
   }
 }
 
-module.exports = new ItemDaCompraDAO();
+module.exports = new ItemCarrinhoDAO();

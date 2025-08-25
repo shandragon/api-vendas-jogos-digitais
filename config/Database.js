@@ -66,12 +66,6 @@ class Database {
                 FOREIGN KEY(fk_empresa) REFERENCES empresas(id),
                 FOREIGN KEY(fk_categoria) REFERENCES categorias(id))`);
 
-            // Criação da tabela de carrinhos
-            this.db.run(`CREATE TABLE IF NOT EXISTS carrinhos (
-                id INTEGER PRIMARY KEY AUTOINCREMENT, 
-                fk_usuario INTEGER NOT NULL, 
-                FOREIGN KEY(fk_usuario) REFERENCES usuarios(id))`);
-
             // Criação da tabela de vendas
             this.db.run(`CREATE TABLE IF NOT EXISTS vendas (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -81,16 +75,22 @@ class Database {
                 data datetime DEFAULT(datetime('now')),
                 FOREIGN KEY(fk_usuario) REFERENCES usuarios(id))`);
 
+            // Criação da tabela de carrinhos
+            this.db.run(`CREATE TABLE IF NOT EXISTS carrinhos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT, 
+                fk_usuario INTEGER NOT NULL, 
+                fk_venda INTEGER,
+                status TEXT NOT NULL DEFAULT 'A',
+                FOREIGN KEY(fk_usuario) REFERENCES usuarios(id), 
+                FOREIGN KEY(fk_venda) REFERENCES vendas(id))`);
+
             // Criação da tabela de itens do carrinho
             this.db.run(`CREATE TABLE IF NOT EXISTS itens_carrinho (
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 fk_jogo INTEGER NOT NULL, 
                 fk_carrinho INTEGER NOT NULL, 
-                fk_venda INTEGER,
-                quantidade INTEGER NOT NULL DEFAULT 1,
                 FOREIGN KEY(fk_jogo) REFERENCES jogos(id), 
-                FOREIGN KEY(fk_carrinho) REFERENCES carrinhos(id), 
-                FOREIGN KEY(fk_venda) REFERENCES vendas(id))`);
+                FOREIGN KEY(fk_carrinho) REFERENCES carrinhos(id))`);
         });
     }
 

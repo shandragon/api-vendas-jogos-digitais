@@ -8,10 +8,16 @@ class CarrinhoDAO {
     return rows.map(row => new Carrinho(row.id, row.fk_usuario));
   }
 
-  async findByUserAndGame(fkUsuario, fkJjogo) {
+  async findAtivoByUser(fkUsuario) {
+    const sql = 'SELECT * FROM carrinhos WHERE fk_usuario = ? AND status = "A"';
+    const row = await dbService.get(sql, [fkUsuario]);
+    return row ? new Carrinho(row.id, row.fk_usuario, row.status, row.fk_venda) : null;
+  }
+
+  async findAtivoByUserAndGame(fkUsuario, fkJjogo) {
     const sql = `SELECT * FROM carrinhos c 
     JOIN itens_carrinho ic ON c.id = ic.fk_carrinho
-    WHERE c.fk_usuario = ? AND fk_jogo = ?`;
+    WHERE c.fk_usuario = ? AND ic.fk_jogo = ? AND c.status = 'A'`;
     const row = await dbService.get(sql, [fkUsuario, fkJjogo]);
     return row;
   }
@@ -19,20 +25,20 @@ class CarrinhoDAO {
   async findById(id) {
     const sql = 'SELECT * FROM carrinhos WHERE id = ?';
     const row = await dbService.get(sql, [id]);
-    return row ? new Carrinho(row.id, row.fk_usuario) : null;
+    return row ? new Carrinho(row.id, row.fk_usuario, row.status, row.fk_venda) : null;
   }
 
   async findAll() {
     const sql = 'SELECT * FROM carrinhos';
     const rows = await dbService.all(sql);
-    return rows.map(row => new Carrinho(row.id, row.fk_usuario));
+    return rows.map(row => new Carrinho(row.id, row.fk_usuario, row.status, row.fk_venda));
   }
 
   async create(fkUsuario) {
     const sql = 'INSERT INTO carrinhos (fk_usuario) VALUES (?)';
     const params = [fkUsuario];
     const result = await dbService.run(sql, params);
-    return new Carrinho(result.lastID, fkUsuario);
+    return new Carrinho(result.lastID, fkUsuario, row.status, row.fk_venda);
   }
 
   async update(id, fkUsuario) {

@@ -3,29 +3,28 @@ const ItemCarrinho = require("../models/ItemCarrinho");
 
 class ItemCarrinhoDAO {
   async create(item) {
-    const sql = 'INSERT INTO itens_carrinho (fk_jogo, fk_carrinho, fk_venda, quantidade) VALUES (?, ?, ?, ?)';
-    const params = [item.fkJogo, item.fkCarrinho, item.fkVenda, item.quantidade];
+    const sql = 'INSERT INTO itens_carrinho (fk_jogo, fk_carrinho) VALUES (?, ?)';
+    const params = [item.fkJogo, item.fkCarrinho];
     const result = await dbService.run(sql, params);
-    return new ItemCarrinho(result.lastID, ...item );
+    return new ItemCarrinho(result.lastID, item.fkJogo, item.fkCarrinho);
   }
 
   async findById(id) {
     const sql = 'SELECT * FROM itens_carrinho WHERE id = ?';
     const row = await dbService.get(sql, [id]);
-    return new ItemCarrinho(row.id, row.fk_jogo, row.fk_carrinho, row.fk_venda);
+    return new ItemCarrinho(row.id, row.fk_jogo, row.fk_carrinho);
   }
 
   async findByCarrinho(fkCarrinho) {
     const sql = 'SELECT * FROM itens_carrinho ic WHERE fk_carrinho = ?';
     const rows = await dbService.all(sql, [fkCarrinho]);
-    return rows.map(row => new ItemCarrinho(row.id, row.fk_jogo, row.fk_carrinho, row.fk_venda));
+    return rows.map(row => new ItemCarrinho(row.id, row.fk_jogo, row.fk_carrinho));
   }
 
-  async update(item) {
-    const sql = 'UPDATE itens_carrinho SET fk_jogo = ?, fk_carrinho = ?, fk_venda = ?, quantidade = ? WHERE id = ?';
-    const params = [itemDaCompra.compraId, itemDaCompra.jogoId, itemDaCompra.precoUnitario, itemDaCompra.quantidade, id];
-    const result = await dbService.run(sql, params);
-    return { changes: result.changes };
+  async findByCarrinhoAndGame(fkCarrinho, fkJogo) {
+    const sql = 'SELECT * FROM itens_carrinho ic WHERE fk_carrinho = ? AND fk_jogo = ?';
+    const row = await dbService.get(sql, [fkCarrinho, fkJogo]);
+    return new ItemCarrinho(row.id, row.fk_jogo, row.fk_carrinho);
   }
 
   async delete(id) {

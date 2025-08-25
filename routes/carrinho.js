@@ -8,6 +8,7 @@ router.use(authMiddleware);
 
 router.get('/', carrinhoController.show);
 router.post('/add', carrinhoController.add);
+router.delete('/:gameId', carrinhoController.removeFromCart);
 
 /*
 router.post('/', [adminMiddleware], empresaController.create);

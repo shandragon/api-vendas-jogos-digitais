@@ -54,7 +54,6 @@ class CarrinhoController {
     const gameId = req.params.gameId;
     const usuarioId = req.user.id;
 
-    console.log('ID do jogo a ser removido:', req.user.id, gameId);
 
     if (!gameId) {
       return res.status(400).json({ message: 'ID do jogo é obrigatório.' });
@@ -66,12 +65,12 @@ class CarrinhoController {
         return res.status(400).json({ message: 'Carrinho encontra-se vazio.' });
       }
 
-      const itemCarrinho = await itemCarrinhoDAO.findByCarrinhoAndGame(usuarioId, gameId);
+      const itemCarrinho = await itemCarrinhoDAO.findByCarrinhoAndGame(carrinho.id, gameId);
 
       if (itemCarrinho) {
         const result = await itemCarrinhoDAO.delete(itemCarrinho.id);
         if (result.changes > 0) {
-          res.status(200).json({ message: 'Jogo removido do carrinho com sucesso!' });
+          return res.status(200).json({ message: 'Jogo removido do carrinho com sucesso!' });
         }
       }
 

@@ -41,6 +41,12 @@ class CarrinhoDAO {
     return new Carrinho(result.lastID, fkUsuario, row.status, row.fk_venda);
   }
 
+  async finalize(id, fkVenda) {
+    const sql = `UPDATE carrinhos SET status = 'F', fk_venda = ? WHERE id = ?`;
+    const result = await dbService.run(sql, [fkVenda, id]);
+    return { changes: result.changes };
+  }
+
   async update(id, fkUsuario) {
     const sql = `UPDATE carrinhos SET fk_usuario = ? WHERE id = ?`;
     const result = await dbService.run(sql, [fkUsuario, id]);

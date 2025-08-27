@@ -8,6 +8,7 @@ const userRoutes = require('./usuario');
 const profileRoutes = require('./profile');
 const jogoRoutes = require('./jogo');
 const carrinhoRoutes = require('./carrinho');
+const vendaRoutes = require('./venda');
 
 router.get('/', (req, res) => res.send('API Version 1.0.0 on-line!'));
 
@@ -17,5 +18,6 @@ router.use('/usuarios', userRoutes);
 router.use('/profiles', profileRoutes);
 router.use('/jogos', jogoRoutes);
 router.use('/carrinho', carrinhoRoutes);
+router.use('/vendas', vendaRoutes);
 
 module.exports = router;

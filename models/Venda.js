@@ -1,4 +1,4 @@
-class Jogo {
+class Venda {
     constructor(id, valorTotal, quantidade, data, fkUsuario) {
         this.id = id;
         this.valorTotal = valorTotal;
@@ -8,4 +8,4 @@ class Jogo {
     }
 }
 
-module.exports = Jogo;
+module.exports = Venda;

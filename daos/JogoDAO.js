@@ -11,14 +11,14 @@ class JogoDAO {
         }
         const rows = await dbService.all(query);
         if (rows == undefined) return [];
-        return rows.map(row => new Jogo(row.id, row.nome, row.categoria, row.ano, row.fk_empresa));
+        return rows.map(row => new Jogo(row.id, row.nome, row.ano, row.preco, row.descricao, row.fk_empresa, row.fk_categoria));
     }
 
     async findById(id) {
         const query = "SELECT * FROM jogos WHERE id = ?";
         const row = await dbService.get(query, [id]);
         if (!row) return null;
-        return new Jogo(row.id, row.nome, row.categoria, row.ano, row.fk_empresa);
+        return new Jogo(row.id, row.nome, row.ano, row.preco, row.descricao, row.fk_empresa, row.fk_categoria);
     }
 
     async create(jogo) {

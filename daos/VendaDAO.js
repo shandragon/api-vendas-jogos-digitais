@@ -1,4 +1,5 @@
-const dbService = require('../services/dbService');
+const dbService = require('../services/DatabaseService');
+const Venda = require("../models/Venda");
 
 class VendaDAO {
   async findById(id) {
@@ -7,9 +8,10 @@ class VendaDAO {
     return row;
   }
 
-  async findByUserId(usuarioId) {
+  async findByUser(usuarioId) {
     const sql = 'SELECT * FROM vendas WHERE fk_usuario = ?';
     const rows = await dbService.all(sql, [usuarioId]);
+    rows.map(row => new Venda(row.id, row.valor_total, row.quantidade, row.data, row.fk_usuario));
     return rows;
   }
 
@@ -23,7 +25,8 @@ class VendaDAO {
     const sql = 'INSERT INTO vendas (fk_usuario, data, valor_total, quantidade) VALUES (?, ?, ?, ?)';
     const params = [venda.fkUsuario, venda.data, venda.valorTotal, venda.quantidade];
     const result = await dbService.run(sql, params);
-    return { id: result.lastID, ...venda };
+    venda.id = result.lastID;
+    return venda;
   }
 
   async update(id, venda) {

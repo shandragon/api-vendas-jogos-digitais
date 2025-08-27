@@ -100,6 +100,17 @@ class CarrinhoController {
       res.status(500).json({ message: 'Erro no servidor.', error: error.message });
     }
   }
+
+  async all(req, res) {
+    const usuarioId = req.user.id;
+
+    try {
+      const carrinhos = await carrinhoDAO.findByUser(usuarioId);
+      res.json({ carrinhos });
+    } catch (error) {
+      res.status(500).json({ message: 'Erro no servidor.', error: error.message });
+    }
+  }
 }
 
 module.exports = new CarrinhoController();

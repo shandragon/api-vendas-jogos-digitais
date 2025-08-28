@@ -7,7 +7,10 @@ class UsuarioDAO {
     const sql = 'SELECT * FROM usuarios WHERE id = ?';
     const row = await dbService.get(sql, [id]);
     if (!row) return null;
-    return new Usuario(row.id, row.nome, row.email, row.senha, row.fk_perfil);
+    let usuario = new Usuario(row.nome, row.email, row.senha, row.data_nascimento, row.fk_perfil);
+    usuario.id = row.id;
+    delete usuario.senha; // Nunca retornar a senha
+    return usuario;
   }
 
   async getByEmail(email) {
@@ -28,8 +31,8 @@ class UsuarioDAO {
   }
 
   async create(usuario) {
-    const sql = 'INSERT INTO usuarios (nome, email, senha, fk_perfil) VALUES (?, ?, ?, ?)';
-    const params = [usuario.nome, usuario.email, usuario.senha, usuario.fkPerfil];
+    const sql = 'INSERT INTO usuarios (nome, email, senha, fk_perfil, data_nascimento) VALUES (?, ?, ?, ?, ?)';
+    const params = [usuario.nome, usuario.email, usuario.senha, usuario.fkPerfil, usuario.dataNascimento];
     const result = await dbService.run(sql, params);
     return { id: result.lastID, ...usuario };
   }

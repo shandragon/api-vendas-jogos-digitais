@@ -6,9 +6,19 @@ const PerfilDAO = require('../daos/PerfilDAO');
 class AuthController {
     async register(req, res) {
         const { nome, email, senha } = req.body;
+        let { dataNascimento } = req.body;
 
         if (!nome || !email || !senha) {
             return res.status(400).json({ message: 'Todos os campos são obrigatórios.' });
+        }
+
+        if (dataNascimento) {
+            const [dia, mes, ano] = dataNascimento.split('/');
+            dataNascimento = new Date(`${ano}-${mes}-${dia}T00:00:00`);
+            if (isNaN(Date.parse(dataNascimento))) {
+                return res.status(400).json({ message: 'Data de nascimento inválida.' });
+            }
+            dataNascimento = dataNascimento.toISOString();
         }
 
         try {
@@ -25,7 +35,7 @@ class AuthController {
                 return res.status(500).json({ message: 'Perfil de cliente não encontrado.' });
             }
 
-            const newUser = await UsuarioDAO.create({ nome, email, senha: hashedPassword, fkPerfil: clienteProfile.id });
+            const newUser = await UsuarioDAO.create({ nome, email, dataNascimento, senha: hashedPassword, fkPerfil: clienteProfile.id });
 
             res.status(201).json({ message: 'Usuário cadastrado com sucesso!', userId: newUser.id });
         } catch (error) {

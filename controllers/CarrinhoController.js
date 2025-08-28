@@ -21,7 +21,6 @@ class CarrinhoController {
 
       // 2. Verificar se existe carrinho ativo para o usuário
       let carrinho = await carrinhoDAO.findAtivoByUser(usuarioId);
-      console.log('Carrinho ativo encontrado:', carrinho);
       if (!carrinho) {
         carrinho = await carrinhoDAO.create(usuarioId);
       } else {

@@ -21,7 +21,6 @@ class VendaController {
 
             const jogos = await Promise.all(itens.map(item => jogoDAO.findById(item.fkJogo)));
             const valorTotal = Number(jogos.reduce((total, jogo) => total + jogo.preco, 0).toFixed(2));
-            console.log('Valor total final:', valorTotal);
             
             const novaVenda = await vendaDAO.create(new Venda(null, valorTotal, itens.length, new Date(), usuarioId));
 

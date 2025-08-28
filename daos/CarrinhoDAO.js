@@ -38,7 +38,7 @@ class CarrinhoDAO {
     const sql = 'INSERT INTO carrinhos (fk_usuario) VALUES (?)';
     const params = [fkUsuario];
     const result = await dbService.run(sql, params);
-    return new Carrinho(result.lastID, fkUsuario, row.status, row.fk_venda);
+    return new Carrinho(result.lastID, fkUsuario, result.status, result.fk_venda);
   }
 
   async finalize(id, fkVenda) {

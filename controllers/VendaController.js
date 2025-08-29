@@ -3,6 +3,7 @@ const carrinhoDAO = require('../daos/CarrinhoDAO');
 const itemCarrinhoDAO = require('../daos/ItemCarrinhoDAO');
 const jogoDAO = require('../daos/JogoDAO');
 const Venda = require("../models/Venda");
+const { generateActivationKey } = require('../util/cripto');
 
 class VendaController {
     async checkout(req, res) {
@@ -23,6 +24,11 @@ class VendaController {
             const valorTotal = Number(jogos.reduce((total, jogo) => total + jogo.preco, 0).toFixed(2));
             
             const novaVenda = await vendaDAO.create(new Venda(null, valorTotal, itens.length, new Date(), usuarioId));
+            // Gerar chaves de ativação e salvar itens do carrinho com as chaves
+            for (const item of itens) {
+                const chaveAtivacao = generateActivationKey();
+                await itemCarrinhoDAO.updateChaveAtivacao(item.id, chaveAtivacao);
+            }
 
             // Marcar o carrinho como finalizado
             await carrinhoDAO.finalize(carrinho.id, novaVenda.id);

@@ -1,4 +1,4 @@
-const bcrypt = require('bcryptjs');
+const { hashPassword, verifyPassword } = require('../util/cripto');
 const jwt = require('jsonwebtoken');
 const UsuarioDAO = require('../daos/UsuarioDAO');
 const PerfilDAO = require('../daos/PerfilDAO');
@@ -27,8 +27,7 @@ class AuthController {
                 return res.status(409).json({ message: 'E-mail já cadastrado.' });
             }
 
-            const salt = await bcrypt.genSalt(10);
-            const hashedPassword = await bcrypt.hash(senha, salt);
+            const hashedPassword = hashPassword(senha);
 
             const clienteProfile = await PerfilDAO.getByName('Cliente');
             if (!clienteProfile) {
@@ -57,7 +56,7 @@ class AuthController {
                 return res.status(404).json({ message: 'Usuário não encontrado.' });
             }
 
-            const isMatch = await bcrypt.compare(senha, user.senha);
+            const isMatch = await verifyPassword(senha, user.senha);
             if (!isMatch) {
                 return res.status(401).json({ message: 'Credenciais inválidas.' });
             }

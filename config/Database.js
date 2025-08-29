@@ -1,4 +1,8 @@
 const sqlite = require('sqlite3').verbose();
+const fs = require('fs');
+const path = require('path');
+const { hashPassword } = require('../util/cripto');
+
 require("dotenv").config();
 
 class Database {
@@ -88,17 +92,36 @@ class Database {
             this.db.run(`CREATE TABLE IF NOT EXISTS itens_carrinho (
                 id INTEGER PRIMARY KEY AUTOINCREMENT, 
                 fk_jogo INTEGER NOT NULL, 
-                fk_carrinho INTEGER NOT NULL, 
+                fk_carrinho INTEGER NOT NULL,
+                chave_ativacao TEXT,
                 FOREIGN KEY(fk_jogo) REFERENCES jogos(id), 
                 FOREIGN KEY(fk_carrinho) REFERENCES carrinhos(id))`);
+
+            // Criação da tabela de avaliações
+            this.db.run(`CREATE TABLE IF NOT EXISTS avaliacoes (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                fk_usuario INTEGER NOT NULL,
+                fk_jogo INTEGER NOT NULL,
+                nota INTEGER NOT NULL CHECK(nota >= 1 AND nota <= 5),
+                comentario TEXT,
+                data datetime DEFAULT(datetime('now')),
+                FOREIGN KEY(fk_usuario) REFERENCES usuarios(id),
+                FOREIGN KEY(fk_jogo) REFERENCES jogos(id),
+                UNIQUE(fk_usuario, fk_jogo))`);
         });
     }
 
-    _seed(){
-        this.db.serialize(() => {
+    async _seed(){
+        this.db.serialize(async () => {
             // Insere perfis
             this.db.run(`INSERT OR IGNORE INTO perfis (nome) VALUES ('Administrador')`);
             this.db.run(`INSERT OR IGNORE INTO perfis (nome) VALUES ('Cliente')`);
+
+            // Insere um usuários
+            const passAdmin = await hashPassword('admin123');
+            const passCliente = await hashPassword('cliente123');
+            this.db.run(`INSERT OR IGNORE INTO usuarios (nome, email, senha, fk_perfil) VALUES ('Admin', 'admin@avjd.com', '${passAdmin}', (SELECT id FROM perfis WHERE nome = 'Administrador'))`);
+            this.db.run(`INSERT OR IGNORE INTO usuarios (nome, email, senha, fk_perfil) VALUES ('Cliente', 'cliente@avjd.com', '${passCliente}', (SELECT id FROM perfis WHERE nome = 'Cliente'))`);
 
             // Insere categorias
             this.db.run(`INSERT OR IGNORE INTO categorias (nome) VALUES ('Ação')`);
@@ -128,11 +151,35 @@ class Database {
             this.db.run(`INSERT OR IGNORE INTO empresas (nome) VALUES ('Sega')`);
             this.db.run(`INSERT OR IGNORE INTO empresas (nome) VALUES ('Capcom')`);
             this.db.run(`INSERT OR IGNORE INTO empresas (nome) VALUES ('Square Enix')`);
-            this.db.run(`INSERT OR IGNORE INTO empresas (nome) VALUES ('Bethesda')`);
             this.db.run(`INSERT OR IGNORE INTO empresas (nome) VALUES ('Epic Games')`);
             this.db.run(`INSERT OR IGNORE INTO empresas (nome) VALUES ('CD Projekt Red')`);
             this.db.run(`INSERT OR IGNORE INTO empresas (nome) VALUES ('Riot Games')`);
             this.db.run(`INSERT OR IGNORE INTO empresas (nome) VALUES ('Blizzard Entertainment')`);
+            this.db.run(`INSERT OR IGNORE INTO empresas (nome) VALUES ('Dumativa')`);
+        
+            this._seedJogosFromCSV();
+        });
+    }
+
+    _seedJogosFromCSV() {
+        const csvFilePath = path.join(__dirname, 'jogos.csv');
+        fs.readFile(csvFilePath, 'utf8', (err, data) => {
+            if (err) {
+                console.error('Erro ao ler o arquivo CSV:', err);
+                return;
+            }
+
+            const lines = data.split('\n').slice(1);
+            lines.forEach(line => {
+                const [nome, ano, preco, descricao, empresa, categoria] = line.split(',');
+                if (nome) {
+                    this.db.run(`INSERT OR IGNORE INTO empresas (nome) VALUES (?)`, [empresa]);
+                    this.db.run(`INSERT OR IGNORE INTO categorias (nome) VALUES (?)`, [categoria]);
+                    this.db.run(`INSERT OR IGNORE INTO jogos (nome, ano, preco, descricao, fk_empresa, fk_categoria) VALUES 
+                        (?, ?, ?, ?, (SELECT id FROM empresas WHERE nome = ?), (SELECT id FROM categorias WHERE nome = ?))`, 
+                        [nome, parseInt(ano), parseFloat(preco), descricao, empresa, categoria]);
+                }
+            });
         });
     }
 }

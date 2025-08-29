@@ -9,6 +9,12 @@ class ItemCarrinhoDAO {
     return new ItemCarrinho(result.lastID, item.fkJogo, item.fkCarrinho);
   }
 
+  async updateChaveAtivacao(id, chaveAtivacao) {
+    const sql = `UPDATE itens_carrinho SET chave_ativacao = ? WHERE id = ?`;
+    const result = await dbService.run(sql, [chaveAtivacao, id]);
+    return { changes: result.changes };
+  }
+
   async findById(id) {
     const sql = 'SELECT * FROM itens_carrinho WHERE id = ?';
     const row = await dbService.get(sql, [id]);

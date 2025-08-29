@@ -8,5 +8,6 @@ const adminMiddleware = require('../middleware/adminMiddleware');
 router.use(authMiddleware);
 
 router.get('/:id', userController.show);
+router.get('/my/games', userController.getGame);
 
 module.exports = router;

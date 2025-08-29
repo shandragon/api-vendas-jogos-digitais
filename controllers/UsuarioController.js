@@ -1,5 +1,6 @@
 const UsuarioDAO = require('../daos/UsuarioDAO');
 const PerfilDAO = require('../daos/PerfilDAO');
+const JogoDAO = require('../daos/JogoDAO');
 
 class UsuarioController {
     index(req, res) {
@@ -19,6 +20,19 @@ class UsuarioController {
             res.json(usuario);
         } catch (error) {
             res.status(500).json({ error: error.message, message: 'Erro ao buscar usuário.' });
+        }
+    }
+
+    async getGame(req, res) {
+        try {
+            const usuarioId = req.user.id;
+            const jogos = await JogoDAO.findByUser(usuarioId);
+            if (!jogos) {
+                return res.status(204).json({ error: "Usuário sem jogos." });
+            }
+            res.json(jogos);
+        } catch (error) {
+            res.status(500).json({ error: error.message, message: 'Erro ao buscar jogos do usuário.' });
         }
     }
 

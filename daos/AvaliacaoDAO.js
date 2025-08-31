@@ -1,41 +1,42 @@
 const dbService = require('../services/DatabaseService');
-const avaliacao = require('../models/Avaliacao');
+const Avaliacao = require('../models/Avaliacao');
 
 class AvaliacaoDAO {
     async findById(id) {
         const sql = 'SELECT * FROM avaliacoes WHERE id = ?';
         const row = await dbService.get(sql, [id]);
-        return row ? new avaliacao(row.id, row.fk_jogo, row.fk_usuario, row.nota, row.comentario) : null;
+        return row ? new Avaliacao(row.id, row.fk_jogo, row.fk_usuario, row.nota, row.comentario) : null;
     }
 
     async findByUserAndGame(fkUsuario, fkJogo) {
         const sql = 'SELECT * FROM avaliacoes WHERE fk_usuario = ? AND fk_jogo = ?';
         const row = await dbService.get(sql, [fkUsuario, fkJogo]);
-        return row ? new avaliacao(row.id, row.fk_jogo, row.fk_usuario, row.nota, row.comentario) : null;
+        return row ? new Avaliacao(row.id, row.fk_jogo, row.fk_usuario, row.nota, row.comentario) : null;
     }
 
     async findByGame(fkJogo) {
         const sql = 'SELECT * FROM avaliacoes WHERE fk_jogo = ?';
         const rows = await dbService.all(sql, [fkJogo]);
-        return rows.map(row => new avaliacao(row.id, row.fk_jogo, row.fk_usuario, row.nota, row.comentario));
+        return rows.map(row => new Avaliacao(row.id, row.fk_jogo, row.fk_usuario, row.nota, row.comentario));
     }
 
     async findByUser(fkUsuario) {
         const sql = 'SELECT * FROM avaliacoes WHERE fk_usuario = ?';
         const rows = await dbService.all(sql, [fkUsuario]);
-        return rows.map(row => new avaliacao(row.id, row.fk_jogo, row.fk_usuario, row.nota, row.comentario));
+        return rows.map(row => new Avaliacao(row.id, row.fk_jogo, row.fk_usuario, row.nota, row.comentario));
     }
 
-    async create(fkUsuario, fkJogo, nota, comentario) {
-        const sql = 'INSERT INTO avaliacoes (fk_usuario, fk_jogo, nota, comentario) VALUES (?, ?, ?, ?)';
-        const params = [fkUsuario, fkJogo, nota, comentario];
+    async create(avaliacao) {
+        const sql = 'INSERT INTO avaliacoes (fk_usuario, fk_jogo, nota, comentario, data) VALUES (?, ?, ?, ?, ?)';
+        const params = [avaliacao.fkUsuario, avaliacao.fkJogo, avaliacao.nota, avaliacao.comentario, new Date().toISOString()];
         const result = await dbService.run(sql, params);
-        return new avaliacao(result.lastID, fkJogo, fkUsuario, nota, comentario);
+        avaliacao.id = result.lastID;
+        return avaliacao;
     }
 
     async update(id, nota, comentario) {
-        const sql = `UPDATE avaliacoes SET nota = ?, comentario = ? WHERE id = ?`;
-        const result = await dbService.run(sql, [nota, comentario, id]);
+        const sql = `UPDATE avaliacoes SET nota = ?, comentario = ?, data = ? WHERE id = ?`;
+        const result = await dbService.run(sql, [nota, comentario, new Date().toISOString(), id]);
         return { changes: result.changes };
     }
 
@@ -46,4 +47,4 @@ class AvaliacaoDAO {
     }
 }
 
-module.exports = AvaliacaoDAO;
+module.exports = new AvaliacaoDAO();

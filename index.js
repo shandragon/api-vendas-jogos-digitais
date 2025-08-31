@@ -1,5 +1,15 @@
 const express = require('express');
 const v1Routes = require('./routes/v1');
+const fs = require('fs');
+const path = require('path');
+
+const envPath = path.resolve(__dirname, '.env');
+if (!fs.existsSync(envPath)) {
+  console.error('ERRO: O arquivo .env não foi encontrado!');
+  console.error('Por favor, crie um arquivo .env na raiz do projeto e adicione as variáveis de ambiente necessárias.');
+
+  process.exit(1);
+}
 
 const app = express();
 const APP_PORT = process.env.APP_PORT || 3000;

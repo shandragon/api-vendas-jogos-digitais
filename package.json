@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "generate:jwt-secret": "node -e \"console.log(require('crypto').randomBytes(32).toString('hex'))\""
   },
   "author": "Adailton de Jesus Cerqueira Junior",
   "license": "ISC",

@@ -27,7 +27,7 @@ class AuthController {
                 return res.status(409).json({ message: 'E-mail já cadastrado.' });
             }
 
-            const hashedPassword = hashPassword(senha);
+            const hashedPassword = await hashPassword(senha);
 
             const clienteProfile = await PerfilDAO.getByName('Cliente');
             if (!clienteProfile) {
@@ -49,7 +49,7 @@ class AuthController {
             return res.status(400).json({ message: 'E-mail e senha são obrigatórios.' });
         }
 
-        try {
+        //try {
             const user = await UsuarioDAO.getByEmail(email);
 
             if (!user) {
@@ -71,9 +71,9 @@ class AuthController {
 
             res.json({ message: 'Login bem-sucedido!', token });
 
-        } catch (error) {
-            res.status(500).json({ message: 'Erro no servidor ao tentar fazer login.', error: error.message });
-        }
+        // } catch (error) {
+        //     res.status(500).json({ message: 'Erro no servidor ao tentar fazer login.', error: error.message });
+        // }
     }
 }
 

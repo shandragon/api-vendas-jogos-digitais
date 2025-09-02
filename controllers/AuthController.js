@@ -49,7 +49,7 @@ class AuthController {
             return res.status(400).json({ message: 'E-mail e senha são obrigatórios.' });
         }
 
-        //try {
+        try {
             const user = await UsuarioDAO.getByEmail(email);
 
             if (!user) {
@@ -71,9 +71,38 @@ class AuthController {
 
             res.json({ message: 'Login bem-sucedido!', token });
 
-        // } catch (error) {
-        //     res.status(500).json({ message: 'Erro no servidor ao tentar fazer login.', error: error.message });
-        // }
+        } catch (error) {
+            res.status(500).json({ message: 'Erro no servidor ao tentar fazer login.', error: error.message });
+        }
+    }
+
+    async changePassword(req, res) {
+        const userId = req.user.id;
+        const { currentPassword, newPassword } = req.body;
+        console.log(req.body);
+
+        if (!currentPassword || !newPassword) {
+            return res.status(400).json({ message: 'Senha atual e nova senha são obrigatórias.' });
+        }
+        
+        try {
+            const user = await UsuarioDAO.getWithPasswd(userId);
+            if (!user) {
+                return res.status(404).json({ message: 'Usuário não encontrado.' });
+            }
+            console.log(user)
+            const isMatch = await verifyPassword(currentPassword, user.senha);
+            if (!isMatch) {
+                return res.status(401).json({ message: 'Senha atual incorreta.' });
+            }
+
+            const hashedNewPassword = await hashPassword(newPassword);
+            await UsuarioDAO.updatePassword(userId, hashedNewPassword);
+
+            res.json({ message: 'Senha alterada com sucesso!' });
+        } catch (error) {
+            res.status(500).json({ message: 'Erro no servidor ao tentar alterar a senha.', error: error.message });
+        }
     }
 }
 

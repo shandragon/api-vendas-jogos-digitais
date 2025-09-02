@@ -49,7 +49,7 @@ RF13 – Usuários podem avaliar jogos com nota (1–5) e comentário.
 
 RF14 – API disponibilizará média de avaliações e quantidade de comentários.
 
-RF15 – Comentários devem permitir marcação de spoilers  (EM CONSTRUÇÃO).
+RF15 – Comentários devem permitir marcação de spoilers (EM CONSTRUÇÃO).
 
 ## 3. Requisitos Não Funcionais
 
@@ -61,7 +61,7 @@ RNF02 – Retornar códigos HTTP adequados (200, 201, 400, 401, 403, 404, 422, 5
 
 RNF03 – Retornar mensagens de validação detalhadas em JSON legível (exemplo: "error": "Senha deve ter pelo menos 8 caracteres").
 
-RNF04 – Suporte a paginação e ordenação em listagens.
+RNF04 – Suporte a paginação e ordenação em listagens (EM CONSTRUÇÃO).
 
 RNF05 – API deve retornar mensagens de confirmação em operações sensíveis (ex.: exclusão de conta, remoção de item do carrinho).
 

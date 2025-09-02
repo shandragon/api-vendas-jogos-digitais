@@ -31,7 +31,7 @@ RF06 – Listar todos os jogos com filtros por: categoria e palavras-chave no t�
 
 RF07 – Detalhar um jogo específico.
 
-RF08 – Permitir ao usuário adicionar jogos à lista de desejos (EM CONSTRUÇÃO).
+RF08 – Permitir ao usuário adicionar jogos à lista de desejos.
 
 RF09 – Permitir ao usuário adicionar jogos ao carrinho.
 

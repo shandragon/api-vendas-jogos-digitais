@@ -108,6 +108,15 @@ class Database {
                 FOREIGN KEY(fk_usuario) REFERENCES usuarios(id),
                 FOREIGN KEY(fk_jogo) REFERENCES jogos(id),
                 UNIQUE(fk_usuario, fk_jogo))`);
+
+            // Criação da tabela de lista de desejos
+            this.db.run(`CREATE TABLE IF NOT EXISTS lista_desejos (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                fk_usuario INTEGER NOT NULL,
+                fk_jogo INTEGER NOT NULL,
+                FOREIGN KEY(fk_usuario) REFERENCES usuarios(id),
+                FOREIGN KEY(fk_jogo) REFERENCES jogos(id),
+                UNIQUE(fk_usuario, fk_jogo))`);
         });
     }
 

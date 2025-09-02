@@ -10,6 +10,7 @@ const jogoRoutes = require('./jogo');
 const carrinhoRoutes = require('./carrinho');
 const vendaRoutes = require('./venda');
 const avaliacaoRoutes = require('./avaliacao');
+const listaDesejoRoutes = require('./listaDesejo');
 
 router.get('/', (req, res) => res.send('API Version 1.0.0 on-line!'));
 
@@ -21,5 +22,6 @@ router.use('/jogos', jogoRoutes);
 router.use('/carrinho', carrinhoRoutes);
 router.use('/vendas', vendaRoutes);
 router.use('/avaliacoes', avaliacaoRoutes);
+router.use('/lista-desejo', listaDesejoRoutes);
 
 module.exports = router;

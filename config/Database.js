@@ -68,7 +68,8 @@ class Database {
                 fk_empresa integer NOT NULL,
                 fk_categoria integer NOT NULL,
                 FOREIGN KEY(fk_empresa) REFERENCES empresas(id),
-                FOREIGN KEY(fk_categoria) REFERENCES categorias(id))`);
+                FOREIGN KEY(fk_categoria) REFERENCES categorias(id),
+                UNIQUE(nome, fk_empresa))`);
 
             // Criação da tabela de vendas
             this.db.run(`CREATE TABLE IF NOT EXISTS vendas (

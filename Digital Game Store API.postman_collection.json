@@ -1154,7 +1154,11 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://localhost:3000"
+			"value": "http://localhost:3000{{version}}"
+		},
+		{
+			"key": "version",
+			"value": "/api/v1"
 		},
 		{
 			"key": "token",

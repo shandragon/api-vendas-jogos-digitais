@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "f6be67a8-6347-47ed-bca5-5ddf20f04412",
+		"_postman_id": "cda201a6-cc10-4ec2-ae98-61ec400cee5f",
 		"name": "Digital Game Store API",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -213,7 +213,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"jogoId\": 1,\n    \"quantidade\": 1\n}"
+							"raw": "{\n    \"jogoId\": 1\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/carrinho/add",
@@ -250,7 +250,7 @@
 							"variable": [
 								{
 									"key": "gameId",
-									"value": ""
+									"value": "1"
 								}
 							]
 						}
@@ -1129,6 +1129,110 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "Report",
+			"item": [
+				{
+					"name": "Game Most Sell",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/relatorios/games-most-sell?top=5",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"relatorios",
+								"games-most-sell"
+							],
+							"query": [
+								{
+									"key": "top",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Game Most Sell by Enterprise",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/relatorios/jogos-mais-vendidos?top=5&empresa=7",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"relatorios",
+								"jogos-mais-vendidos"
+							],
+							"query": [
+								{
+									"key": "top",
+									"value": "5"
+								},
+								{
+									"key": "empresa",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"auth": {
+				"type": "bearer",
+				"bearer": [
+					{
+						"key": "token",
+						"value": "{{token}}",
+						"type": "string"
+					}
+				]
+			},
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{baseUrl}}/",
+					"host": [
+						"{{baseUrl}}"
+					],
+					"path": [
+						""
+					]
+				}
+			},
+			"response": []
 		}
 	],
 	"event": [

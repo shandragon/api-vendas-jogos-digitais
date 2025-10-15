@@ -5,7 +5,7 @@ class CarrinhoDAO {
   async findByUser(fkUsuario) {
     const sql = 'SELECT * FROM carrinhos WHERE fk_usuario = ?';
     const rows = await dbService.all(sql, [fkUsuario]);
-    return rows.map(row => new Carrinho(row.id, row.fk_usuario));
+    return rows.map(row => new Carrinho(row.id, row.fk_usuario, row.status, row.fk_venda));
   }
 
   async findAtivoByUser(fkUsuario) {

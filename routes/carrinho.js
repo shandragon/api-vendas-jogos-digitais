@@ -11,9 +11,4 @@ router.get('/ativo', carrinhoController.show);
 router.post('/add', carrinhoController.add);
 router.delete('/:gameId', carrinhoController.removeFromCart);
 
-/*
-router.post('/', [adminMiddleware], empresaController.create);
-router.put('/:id', [adminMiddleware], empresaController.update);
-router.delete('/:id', [adminMiddleware], empresaController.delete);
-*/
 module.exports = router;

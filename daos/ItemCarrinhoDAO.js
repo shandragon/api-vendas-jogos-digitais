@@ -24,7 +24,7 @@ class ItemCarrinhoDAO {
   async findByCarrinho(fkCarrinho) {
     const sql = 'SELECT * FROM itens_carrinho ic WHERE fk_carrinho = ?';
     const rows = await dbService.all(sql, [fkCarrinho]);
-    return rows.map(row => new ItemCarrinho(row.id, row.fk_jogo, row.fk_carrinho));
+    return rows.map(row => new ItemCarrinho(row.id, row.fk_jogo, row.fk_carrinho, row.chave_ativacao));
   }
 
   async findByCarrinhoAndGame(fkCarrinho, fkJogo) {

@@ -85,7 +85,7 @@ class CarrinhoController {
 
     try {
       const carrinho = await carrinhoDAO.findAtivoByUser(usuarioId);
-      
+
       if (!carrinho) {
         return res.status(200).json({ message: 'Carrinho vazio.' });
       }
@@ -105,7 +105,15 @@ class CarrinhoController {
 
     try {
       const carrinhos = await carrinhoDAO.findByUser(usuarioId);
-      res.json({ carrinhos });
+
+      const carrinhosComItens = await Promise.all(
+        carrinhos.map(async (carrinho) => {
+          const itens = await itemCarrinhoDAO.findByCarrinho(carrinho.id);
+          return {...carrinho, itens};
+        })
+      );
+
+      res.json({ carrinhosComItens });
     } catch (error) {
       res.status(500).json({ message: 'Erro no servidor.', error: error.message });
     }

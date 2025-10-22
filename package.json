@@ -11,11 +11,12 @@
   "author": "Adailton de Jesus Cerqueira Junior",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^3.0.2",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.1",
     "express": "^5.1.0",
-    "sqlite3": "^5.1.7",
     "jsonwebtoken": "^9.0.2",
-    "bcryptjs": "^3.0.2"
+    "sqlite3": "^5.1.7"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"

@@ -12,6 +12,16 @@ class JogoController {
         }
     }
 
+    async exhibition(req, res) {
+        try {
+            const jogos = await JogoDAO.getExhibition();
+            if (jogos.length === 0) return res.status(204).json();
+            res.json(jogos);
+        } catch (error) {
+            res.status(500).json({ error: error.message, message: 'Erro ao buscar jogos.' });
+        }
+    }
+
     async show(req, res) {
         const id = req.params.id;
         try {

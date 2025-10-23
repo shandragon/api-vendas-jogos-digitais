@@ -12,6 +12,7 @@ const vendaRoutes = require('./venda');
 const avaliacaoRoutes = require('./avaliacao');
 const listaDesejoRoutes = require('./listaDesejo');
 const relatorioRoutes = require('./relatorio');
+const publicRoutes = require('./public');
 
 router.get('/', (req, res) => res.send('API Version 1.0.0 on-line!'));
 
@@ -25,5 +26,8 @@ router.use('/vendas', vendaRoutes);
 router.use('/avaliacoes', avaliacaoRoutes);
 router.use('/lista-desejo', listaDesejoRoutes);
 router.use('/relatorios', relatorioRoutes);
+
+// Rota pública
+router.use('/public', publicRoutes);
 
 module.exports = router;

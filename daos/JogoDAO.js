@@ -1,6 +1,7 @@
 const dbService = require('../services/DatabaseService');
 const Jogo = require("../models/Jogo");
 const JogoUsuarioDTO = require('../dtos/JogoUsuarioDTO');
+const JogoDTO = require('../dtos/JogoDTO');
 
 class JogoDAO {
     async all(categoria) {
@@ -13,6 +14,17 @@ class JogoDAO {
         const rows = await dbService.all(query);
         if (rows == undefined) return [];
         return rows.map(row => new Jogo(row.id, row.nome, row.ano, row.preco, row.descricao, row.fk_empresa, row.fk_categoria));
+    }
+
+    async getExhibition() {
+        const query = `
+            SELECT j.*, c.nome as categoria, e.nome as empresa FROM jogos j
+            JOIN categorias c ON c.id = j.fk_categoria
+            JOIN empresas e ON e.id = j.fk_empresa`;
+
+        const rows = await dbService.all(query);
+        if (rows == undefined) return [];
+        return rows.map(row => new JogoDTO(row.nome, row.descricao, row.ano, row.preco, row.categoria, row.empresa));
     }
 
     async findById(id) {

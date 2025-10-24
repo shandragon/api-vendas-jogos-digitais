@@ -64,6 +64,7 @@ class Database {
                 nome varchar(255) NOT NULL,
                 ano integer NOT NULL,
                 preco real NOT NULL,
+                desconto real,
                 descricao TEXT,
                 fk_empresa integer NOT NULL,
                 fk_categoria integer NOT NULL,

@@ -13,7 +13,7 @@ class JogoDAO {
         }
         const rows = await dbService.all(query);
         if (rows == undefined) return [];
-        return rows.map(row => new Jogo(row.id, row.nome, row.ano, row.preco, row.descricao, row.fk_empresa, row.fk_categoria));
+        return rows.map(row => new Jogo(row.id, row.nome, row.ano, row.preco, row.desconto, row.descricao, row.fk_empresa, row.fk_categoria));
     }
 
     async getExhibition() {
@@ -24,14 +24,14 @@ class JogoDAO {
 
         const rows = await dbService.all(query);
         if (rows == undefined) return [];
-        return rows.map(row => new JogoDTO(row.nome, row.descricao, row.ano, row.preco, row.categoria, row.empresa));
+        return rows.map(row => new JogoDTO(row.nome, row.descricao, row.ano, row.preco, row.desconto, row.categoria, row.empresa));
     }
 
     async findById(id) {
         const query = "SELECT * FROM jogos WHERE id = ?";
         const row = await dbService.get(query, [id]);
         if (!row) return null;
-        return new Jogo(row.id, row.nome, row.ano, row.preco, row.descricao, row.fk_empresa, row.fk_categoria);
+        return new Jogo(row.id, row.nome, row.ano, row.preco, row.desconto, row.descricao, row.fk_empresa, row.fk_categoria);
     }
 
     async findByUser(id) {
@@ -42,20 +42,20 @@ class JogoDAO {
             WHERE c.fk_usuario = ?`;
         const rows = await dbService.all(query, [id]);
         if (rows == undefined) return [];
-        return rows.map(row => new JogoUsuarioDTO(row.chave_ativacao, new Jogo(row.id, row.nome, row.ano, row.preco, row.descricao, row.fk_empresa, row.fk_categoria)));
+        return rows.map(row => new JogoUsuarioDTO(row.chave_ativacao, new Jogo(row.id, row.nome, row.ano, row.preco, row.desconto, row.descricao, row.fk_empresa, row.fk_categoria)));
     }
 
     async create(jogo) {
-        const query = "INSERT INTO jogos (nome, descricao, ano, preco, fk_empresa, fk_categoria) VALUES (?, ?, ?, ?, ?, ?)";
-        const params = [jogo.nome, jogo.descricao, jogo.ano, jogo.preco, jogo.fkEmpresa, jogo.fkCategoria];
+        const query = "INSERT INTO jogos (nome, descricao, ano, preco, desconto, fk_empresa, fk_categoria) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        const params = [jogo.nome, jogo.descricao, jogo.ano, jogo.preco, jogo.desconto, jogo.fkEmpresa, jogo.fkCategoria];
         const result = await dbService.run(query, params);
         jogo.id = result.lastID; // Atribuindo o ID gerado pelo banco de dados
         return jogo;
     }
 
     async update(jogo) {
-        const query = "UPDATE jogos set nome = ?, descricao = ?, ano = ?, preco = ?, fk_empresa = ?, fk_categoria = ? where id = ?";
-        const params = [jogo.nome, jogo.descricao, jogo.ano, jogo.preco, jogo.fkEmpresa, jogo.fkCategoria, jogo.id];
+        const query = "UPDATE jogos set nome = ?, descricao = ?, ano = ?, preco = ?, desconto = ?, fk_empresa = ?, fk_categoria = ? where id = ?";
+        const params = [jogo.nome, jogo.descricao, jogo.ano, jogo.preco, jogo.desconto, jogo.fkEmpresa, jogo.fkCategoria, jogo.id];
         const result = await dbService.run(query, params);
         return { changes: result.changes };
     }

@@ -2,32 +2,21 @@ const express = require('express');
 const router = express.Router();
 
 // Rotas
-const authRoutes = require('./auth');
-const empresaRoutes = require('./empresa');
-const userRoutes = require('./usuario');
-const profileRoutes = require('./profile');
-const jogoRoutes = require('./jogo');
-const carrinhoRoutes = require('./carrinho');
-const vendaRoutes = require('./venda');
-const avaliacaoRoutes = require('./avaliacao');
-const listaDesejoRoutes = require('./listaDesejo');
-const relatorioRoutes = require('./relatorio');
-const publicRoutes = require('./public');
-
 router.get('/', (req, res) => res.send('API Version 1.0.0 on-line!'));
 
-router.use('/auth', authRoutes);
-router.use('/empresas', empresaRoutes);
-router.use('/usuarios', userRoutes);
-router.use('/profiles', profileRoutes);
-router.use('/jogos', jogoRoutes);
-router.use('/carrinho', carrinhoRoutes);
-router.use('/vendas', vendaRoutes);
-router.use('/avaliacoes', avaliacaoRoutes);
-router.use('/lista-desejo', listaDesejoRoutes);
-router.use('/relatorios', relatorioRoutes);
+router.use('/auth', require('./auth'));
+router.use('/empresas', require('./empresa'));
+router.use('/usuarios', require('./usuario'));
+router.use('/profiles', require('./profile'));
+router.use('/jogos', require('./jogo'));
+router.use('/categorias', require('./categoria'));
+router.use('/carrinho', require('./carrinho'));
+router.use('/vendas', require('./venda'));
+router.use('/avaliacoes', require('./avaliacao'));
+router.use('/lista-desejo', require('./listaDesejo'));
+router.use('/relatorios', require('./relatorio'));
 
 // Rota pública
-router.use('/public', publicRoutes);
+router.use('/public', require('./public'));
 
 module.exports = router;

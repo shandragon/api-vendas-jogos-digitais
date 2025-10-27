@@ -9,6 +9,13 @@ class CategoriaDAO {
         if (rows == undefined) return [];
         return rows.map(row => new Categoria(row.id, row.nome));
     }
+
+    async findById(id) {
+        const query = "SELECT * FROM categorias WHERE id = ?";
+        const row = await dbService.get(query, [id]);
+        if (!row) return null;
+        return new Categoria(row.id, row.nome);
+    }
 }
 
 module.exports = new CategoriaDAO();

@@ -7,5 +7,7 @@ const authMiddleware = require('../middleware/authMiddleware');
 router.use(authMiddleware);
 
 router.get('/', categoriaController.index);
+router.get('/:id', categoriaController.show);
+
 
 module.exports = router;

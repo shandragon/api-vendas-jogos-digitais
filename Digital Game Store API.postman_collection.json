@@ -312,6 +312,27 @@
 					"response": []
 				},
 				{
+					"name": "All (public)",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/public/jogos",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"public",
+								"jogos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
 					"name": "by ID",
 					"request": {
 						"method": "GET",
@@ -323,6 +344,47 @@
 							],
 							"path": [
 								"jogos",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "1"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All Categories",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/categorias",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categorias"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Categories by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/categorias/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"categorias",
 								":id"
 							],
 							"variable": [
@@ -1139,18 +1201,18 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/relatorios/games-most-sell?top=5",
+							"raw": "{{baseUrl}}/relatorios/jogos-mais-vendidos?top=10",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"relatorios",
-								"games-most-sell"
+								"jogos-mais-vendidos"
 							],
 							"query": [
 								{
 									"key": "top",
-									"value": "5"
+									"value": "10"
 								}
 							]
 						}
@@ -1163,7 +1225,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/relatorios/jogos-mais-vendidos?top=5&empresa=7",
+							"raw": "{{baseUrl}}/relatorios/jogos-mais-vendidos?top=5&empresa=1",
 							"host": [
 								"{{baseUrl}}"
 							],

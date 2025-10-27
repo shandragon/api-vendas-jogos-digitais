@@ -25,31 +25,35 @@ RF04 – Autenticação baseada em JWT.
 
 ### 2.2. Jogos
 
-RF05 – Cadastrar jogo (apenas admin) com: título, descrição, categoria, preço, ano de lançamento, desenvolvedora.
+RF01 – Cadastrar jogo (apenas admin) com: título, descrição, categoria, preço, ano de lançamento, desenvolvedora.
 
-RF06 – Listar todos os jogos com filtros por: categoria e palavras-chave no título/descrição.
+RF02 – Listar todos os jogos com filtros por: categoria e palavras-chave no título/descrição.
 
-RF07 – Detalhar um jogo específico.
+RF03 – Detalhar um jogo específico.
 
-RF08 – Permitir ao usuário adicionar jogos à lista de desejos.
+RF04 – Permitir ao usuário adicionar jogos à lista de desejos.
 
-RF09 – Permitir ao usuário adicionar jogos ao carrinho.
+RF05 – Permitir ao usuário adicionar jogos ao carrinho.
+
+RF06 – Permitir listar todas as categorias.
+
+RF07 – Buscar uma categoria específica.
 
 ### 2.3. Vendas
 
-RF10 – Finalizar venda (simulação de pagamento).
+RF01 – Finalizar venda (simulação de pagamento).
 
-RF11 – Consultar histórico de compras do usuário.
+RF01 – Consultar histórico de compras do usuário.
 
-RF12 – Gerar uma chave de ativação automaticamente.
+RF02 – Gerar uma chave de ativação automaticamente.
 
 ### 2.4. Avaliações do Jogo
 
-RF13 – Usuários podem avaliar jogos com nota (1–5) e comentário.
+RF01 – Usuários podem avaliar jogos com nota (1–5) e comentário.
 
-RF14 – API disponibilizará média de avaliações e quantidade de comentários.
+RF02 – API disponibilizará média de avaliações e quantidade de comentários.
 
-RF15 – Comentários devem permitir marcação de spoilers (EM CONSTRUÇÃO).
+RF03 – Comentários devem permitir marcação de spoilers (EM CONSTRUÇÃO).
 
 ## 3. Requisitos Não Funcionais
 

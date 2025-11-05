@@ -10,6 +10,19 @@
 			"item": [
 				{
 					"name": "Register",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const moment = require('moment');",
+									"let randomPastDate = pm.variables.replaceIn('{{$randomDatePast}}');",
+									"pm.collectionVariables.set('dataNascimento', moment(randomPastDate).format('DD/MM/YYYY'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
 					"request": {
 						"method": "POST",
 						"header": [
@@ -20,7 +33,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nome\": \"John Doe\",\n    \"email\": \"john.doe@example.com\",\n    \"senha\": \"password123\",\n    \"perfilId\": 2\n}"
+							"raw": "{\n    \"nome\": \"{{$randomFullName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"senha\": \"password123\",\n    \"dataNascimento\": \"{{dataNascimento}}\",\n    \"perfilId\": 2\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/auth/register",
@@ -727,8 +740,31 @@
 							"variable": [
 								{
 									"key": "id",
-									"value": "16"
+									"value": "1"
 								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "All",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios",
+								""
 							]
 						}
 					},
@@ -1320,7 +1356,7 @@
 	"variable": [
 		{
 			"key": "baseUrl",
-			"value": "http://localhost:3000{{version}}"
+			"value": "http://localhost:3003{{version}}"
 		},
 		{
 			"key": "version",
@@ -1328,6 +1364,10 @@
 		},
 		{
 			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "dataNascimento",
 			"value": ""
 		}
 	]

@@ -3,11 +3,14 @@ const PerfilDAO = require('../daos/PerfilDAO');
 const JogoDAO = require('../daos/JogoDAO');
 
 class UsuarioController {
-    index(req, res) {
-        UsuarioDAO.all((err, usuarios) => {
-            if (err) return res.status(500).json({ error: err.message });
+    async index(req, res) {
+        try {
+            const usuarios = await UsuarioDAO.all();
             res.json(usuarios);
-        });
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ error: error.message, message: 'Erro ao buscar usuários.' });
+        }
     }
 
     async show(req, res) {
@@ -64,21 +67,21 @@ class UsuarioController {
     }
 
     create(req, res) {
-        const { nome, email, senha } = req.body;
+        const { nome, email, senha, data_nascimento } = req.body;
         if (!nome || !email || !senha) return res.status(400).json({ error: "Campos nome, email e senha são obrigatórios" });
 
-        const usuario = { nome, email, senha };
+        const usuario = { nome, email, senha, data_nascimento };
         UsuarioDAO.adicionar(usuario);
         res.status(201).json({ message: "Usuário criado com sucesso." });
     }
 
     update(req, res) {
-        const { nome, email, senha } = req.body;
+        const { nome, email, senha, data_nascimento } = req.body;
         const id = req.params.id;
 
         if (!nome || !email || !senha) return res.status(400).json({ error: "Campos nome, email e senha são obrigatórios" });
 
-        const usuario = { id, nome, email, senha };
+        const usuario = { id, nome, email, senha, data_nascimento };
         UsuarioDAO.adicionar(usuario);
         res.json({ message: "Usuário atualizado com sucesso." });
     }

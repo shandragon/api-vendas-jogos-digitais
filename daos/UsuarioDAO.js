@@ -45,6 +45,7 @@ class UsuarioDAO {
   }
 
   async create(usuario) {
+    console.log(usuario);
     const sql = 'INSERT INTO usuarios (nome, email, senha, fk_perfil, data_nascimento) VALUES (?, ?, ?, ?, ?)';
     const params = [usuario.nome, usuario.email, usuario.senha, usuario.fkPerfil, usuario.dataNascimento];
     const result = await dbService.run(sql, params);
@@ -52,8 +53,8 @@ class UsuarioDAO {
   }
 
   async update(id, usuario) {
-    const sql = 'UPDATE usuarios SET nome = ?, email = ?, senha = ?, fk_perfil = ? WHERE id = ?';
-    const params = [usuario.nome, usuario.email, usuario.senha, usuario.fkPerfil, id];
+    const sql = 'UPDATE usuarios SET nome = ?, data_nascimento = ?, fk_perfil = ? WHERE id = ?';
+    const params = [usuario.nome, usuario.dataNascimento, usuario.fkPerfil, id];
     const result = await dbService.run(sql, params);
     return { changes: result.changes };
   }

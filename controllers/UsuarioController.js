@@ -66,23 +66,50 @@ class UsuarioController {
         }
     }
 
-    create(req, res) {
-        const { nome, email, senha, data_nascimento } = req.body;
+    async create(req, res) {
+        const { nome, email, senha, data_nascimento, fkPerfil} = req.body;
         if (!nome || !email || !senha) return res.status(400).json({ error: "Campos nome, email e senha são obrigatórios" });
 
-        const usuario = { nome, email, senha, data_nascimento };
+        if (!fkPerfil){
+            const clienteProfile = await PerfilDAO.getByName('Cliente');
+            if (!clienteProfile) {
+                return res.status(500).json({ message: 'Perfil de cliente não encontrado.' });
+            }
+            fkPerfil = clienteProfile.id;
+        }
+
+        const usuario = { nome, email, senha, data_nascimento, fkPerfil};
+        
         UsuarioDAO.adicionar(usuario);
         res.status(201).json({ message: "Usuário criado com sucesso." });
     }
 
-    update(req, res) {
-        const { nome, email, senha, data_nascimento } = req.body;
+    async update(req, res) {
+        const { nome } = req.body;
+        let { dataNascimento, fkPerfil } = req.body;
         const id = req.params.id;
 
-        if (!nome || !email || !senha) return res.status(400).json({ error: "Campos nome, email e senha são obrigatórios" });
+        if (!nome) return res.status(400).json({ error: "Campos nome é obrigatório" });
 
-        const usuario = { id, nome, email, senha, data_nascimento };
-        UsuarioDAO.adicionar(usuario);
+        if (dataNascimento) {
+            const [dia, mes, ano] = dataNascimento.split('/');
+            dataNascimento = new Date(`${ano}-${mes}-${dia}T00:00:00`);
+            if (isNaN(Date.parse(dataNascimento))) {
+                return res.status(400).json({ message: 'Data de nascimento inválida.' });
+            }
+            dataNascimento = dataNascimento.toISOString();
+        }
+
+        if (!fkPerfil){
+            const clienteProfile = await PerfilDAO.getByName('Cliente');
+            if (!clienteProfile) {
+                return res.status(500).json({ message: 'Perfil de cliente não encontrado.' });
+            }
+            fkPerfil = clienteProfile.id;
+        }
+
+        const usuario = { id, nome, dataNascimento, fkPerfil };
+        await UsuarioDAO.update(id, usuario);
         res.json({ message: "Usuário atualizado com sucesso." });
     }
 

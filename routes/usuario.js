@@ -10,5 +10,6 @@ router.use(authMiddleware);
 router.get('/:id', userController.show);
 router.get('/', [adminMiddleware], userController.index);
 router.get('/my/games', userController.getGame);
+router.put('/:id', userController.update);
 
 module.exports = router;

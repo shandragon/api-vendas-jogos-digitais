@@ -33,7 +33,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"nome\": \"{{$randomFullName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"senha\": \"password123\",\n    \"dataNascimento\": \"{{dataNascimento}}\",\n    \"perfilId\": 2\n}"
+							"raw": "{\n    \"nome\": \"{{$randomFullName}}\",\n    \"email\": \"{{$randomEmail}}\",\n    \"senha\": \"password123\",\n    \"dataNascimento\": \"{{dataNascimento}}\"\n}"
 						},
 						"url": {
 							"raw": "{{baseUrl}}/auth/register",
@@ -765,6 +765,57 @@
 							"path": [
 								"usuarios",
 								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"const moment = require('moment');",
+									"let randomPastDate = pm.variables.replaceIn('{{$randomDatePast}}');",
+									"pm.collectionVariables.set('dataNascimento', moment(randomPastDate).format('DD/MM/YYYY'));"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"{{$randomFullName}}\",\n    \"dataNascimento\": \"{{dataNascimento}}\",\n    \"fkPerfil\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/usuarios/:id",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"usuarios",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "3"
+								}
 							]
 						}
 					},
